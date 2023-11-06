@@ -22,9 +22,11 @@ def ask(question, model):
 
     client = OpenAI(api_key=api_key)
 
-    chat_completion = client.chat.completions.create(
+    stream = client.chat.completions.create(
         messages=[{"role": "user", "content": question}],
         model=model,
+        stream=True,
     )
 
-    print(chat_completion.choices[0].message.content)
+    for part in stream:
+        print(part.choices[0].delta.content or "", end="")
